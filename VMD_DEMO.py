@@ -2,7 +2,7 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec # 🌟 引入高级网格排版工具
-
+import matplotlib.font_manager as fm
 # 1. 设置软件网页的全局配置
 st.set_page_config(page_title="VMD 模态分解交互模拟器", layout="wide")
 
@@ -47,8 +47,14 @@ mixed_signal = np.maximum(0, raw_mixed_signal)
 # ====== 下面只需稍微修改图表的 Y 轴显示范围 ======
 # 5. 绘图与可视化 (保持之前的排版设定)
 plt.style.use('seaborn-v0_8-whitegrid')
-plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'Arial Unicode MS', 'sans-serif']
-plt.rcParams['axes.unicode_minus'] = False  
+# 🌟 强制加载你刚刚上传到 GitHub 的字体文件 🌟
+# 注意：这里的 'simhei.ttf' 必须和你上传的文件名一模一样（区分大小写）
+font_path = "simhei.ttf" 
+fm.fontManager.addfont(font_path)
+
+# 将全局字体设置为你刚刚加载的黑体
+plt.rcParams['font.sans-serif'] = ['SimHei'] 
+plt.rcParams['axes.unicode_minus'] = False
 
 fig = plt.figure(figsize=(14, 10))
 from matplotlib.gridspec import GridSpec
@@ -95,5 +101,6 @@ for i in range(6):
 
 # 6. 渲染图表
 st.pyplot(fig)
+
 
 st.success("💡 **排版优势：** 现在所有的图表都集成在了一个紧凑的 14x10 画布中。您可以直接在网页上右键点击这张大图 ->【图片另存为】，把它完美地插入到您的毕业论文里！")
