@@ -3,7 +3,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-import matplotlib.font_manager as fm
 import os
 
 try:
@@ -26,23 +25,6 @@ st.markdown("""
 if not VMD_AVAILABLE:
     st.error("⚠️ 未检测到 vmdpy 库！请在终端运行 `pip install vmdpy` 后刷新页面。")
     st.stop()
-
-# ==========================================
-# 强制挂载本地字体 (解决豆腐块乱码问题)
-# ==========================================
-font_loaded = False
-for font_name in ["simhei.ttf", "SimHei.ttf"]:
-    if os.path.exists(font_name):
-        fm.fontManager.addfont(font_name)
-        prop = fm.FontProperties(fname=font_name)
-        plt.rcParams['font.family'] = prop.get_name()
-        font_loaded = True
-        break
-
-if not font_loaded:
-    plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'Arial Unicode MS', 'sans-serif']
-
-plt.rcParams['axes.unicode_minus'] = False  
 
 # ==========================================
 # 缓存函数：极速读取与处理 Excel
@@ -110,7 +92,7 @@ with st.spinner("正在解析交通流数据，请稍候..."):
 if df is not None:
     unique_dates = pd.Series(df['Datetime'].dt.date.unique()).dropna()
     
-    # 🌟 新增：动态选择时长 (24h or 48h)
+    # 动态选择时长 (24h or 48h)
     duration_option = st.sidebar.radio("⏱️ 选择数据截取时长", ["24 小时 (单日)", "48 小时 (双日)"], index=1)
     days_to_add = 1 if "24" in duration_option else 2
     
@@ -168,17 +150,20 @@ if df is not None:
     imfs_weighted = [u[i] * weights[i] for i in range(6)]
     reconstructed_signal = np.maximum(0, np.sum(imfs_weighted, axis=0))
 
+    # 🌟 修复：必须先设置 style，然后再应用中文字体，否则会被 style 覆盖！
     plt.style.use('seaborn-v0_8-whitegrid')
+    plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'Arial Unicode MS', 'sans-serif']
+    plt.rcParams['axes.unicode_minus'] = False  
     
-    # 🌟 设置输出图像 DPI = 200
-    fig, ax = plt.subplots(figsize=(15, 7), dpi=300)
+    # 设置输出图像 DPI = 200
+    fig, ax = plt.subplots(figsize=(15, 7), dpi=200)
     
     colors = ['#1f77b4', '#2ca02c', '#bcbd22', '#ff7f0e', '#d62728', '#9467bd']
     labels = ["IMF 1 (基准趋势)", "IMF 2 (昼夜潮汐)", "IMF 3 (中低频)", "IMF 4 (中频)", "IMF 5 (中高频)", "IMF 6 (高频噪音)"]
 
     plotted_data = []
 
-    # 🌟 修改：黑实线，不加粗
+    # 黑实线，不加粗
     if show_orig:
         ax.plot(x_axis, y_real, color='black', linestyle='-', linewidth=1.5, alpha=0.7, label="Original Real Traffic (原始真实流量)")
         plotted_data.append(y_real)
@@ -188,7 +173,7 @@ if df is not None:
             ax.plot(x_axis, imfs_weighted[i], color=colors[i], linewidth=1.5, alpha=0.8, label=f"{labels[i]} (权重={weights[i]:.1f})")
             plotted_data.append(imfs_weighted[i])
 
-    # 🌟 修改：红虚线，不加粗
+    # 红虚线，不加粗
     if show_recon:
         ax.plot(x_axis, reconstructed_signal, color='red', linestyle='--', linewidth=1.5, label="Dynamic Reconstructed (动态重构流量)")
         plotted_data.append(reconstructed_signal)
@@ -198,7 +183,7 @@ if df is not None:
     ax.set_xlabel("时间 (Date & Time)", fontsize=12)
     ax.set_ylabel("交通流量 (PCU)", fontsize=12)
     
-    # 🌟 动态 X 轴刻度间距 (单日3小时一标，双日6小时一标)
+    # 动态 X 轴刻度间距 (单日3小时一标，双日6小时一标)
     interval_hours = 3 if days_to_add == 1 else 6
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%m-%d %H:%M'))
     ax.xaxis.set_major_locator(mdates.HourLocator(interval=interval_hours))
