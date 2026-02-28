@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+import matplotlib.font_manager as fm
 import os
 
 try:
@@ -96,7 +97,6 @@ if df is not None:
     duration_option = st.sidebar.radio("⏱️ 选择数据截取时长", ["24 小时 (单日)", "48 小时 (双日)"], index=1)
     days_to_add = 1 if "24" in duration_option else 2
     
-    # 如果选双日，最后一天不能作为起点
     valid_start_dates = unique_dates[:-1] if days_to_add == 2 else unique_dates
     
     selected_date = st.sidebar.selectbox("📅 选择起始日期", valid_start_dates)
@@ -150,9 +150,22 @@ if df is not None:
     imfs_weighted = [u[i] * weights[i] for i in range(6)]
     reconstructed_signal = np.maximum(0, np.sum(imfs_weighted, axis=0))
 
-    # 🌟 修复：必须先设置 style，然后再应用中文字体，否则会被 style 覆盖！
+    # 🌟 终极防覆盖解法：先设样式，再强行挂载字体！
     plt.style.use('seaborn-v0_8-whitegrid')
-    plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'Arial Unicode MS', 'sans-serif']
+    
+    font_loaded = False
+    for font_name in ["simhei.ttf", "SimHei.ttf"]:
+        if os.path.exists(font_name):
+            fm.fontManager.addfont(font_name)
+            # 动态获取实际字体名称，绝对匹配
+            prop = fm.FontProperties(fname=font_name)
+            plt.rcParams['font.family'] = prop.get_name()
+            font_loaded = True
+            break
+            
+    if not font_loaded:
+        plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'Arial Unicode MS', 'sans-serif']
+        
     plt.rcParams['axes.unicode_minus'] = False  
     
     # 设置输出图像 DPI = 200
@@ -163,7 +176,6 @@ if df is not None:
 
     plotted_data = []
 
-    # 黑实线，不加粗
     if show_orig:
         ax.plot(x_axis, y_real, color='black', linestyle='-', linewidth=1.5, alpha=0.7, label="Original Real Traffic (原始真实流量)")
         plotted_data.append(y_real)
@@ -173,7 +185,6 @@ if df is not None:
             ax.plot(x_axis, imfs_weighted[i], color=colors[i], linewidth=1.5, alpha=0.8, label=f"{labels[i]} (权重={weights[i]:.1f})")
             plotted_data.append(imfs_weighted[i])
 
-    # 红虚线，不加粗
     if show_recon:
         ax.plot(x_axis, reconstructed_signal, color='red', linestyle='--', linewidth=1.5, label="Dynamic Reconstructed (动态重构流量)")
         plotted_data.append(reconstructed_signal)
