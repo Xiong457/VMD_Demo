@@ -186,7 +186,7 @@ if df is not None:
             plotted_data.append(imfs_weighted[i])
 
     if show_recon:
-        ax.plot(x_axis, reconstructed_signal, color='red', linestyle='--', linewidth=1.5, label="Dynamic Reconstructed (动态重构流量)")
+        ax.plot(x_axis, reconstructed_signal, color='red', linestyle='-', linewidth=1.5, label="Dynamic Reconstructed (动态重构流量)")
         plotted_data.append(reconstructed_signal)
 
     title_duration = "单日 24h" if days_to_add == 1 else "双日 48h"
@@ -214,3 +214,4 @@ if df is not None:
 
     # 渲染至网页
     st.pyplot(fig)
+
