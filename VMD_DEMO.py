@@ -70,7 +70,7 @@ def run_vmd(y_array):
     tau = 0
     K = 6
     DC = 0
-    init = 1    
+    init = 1
     tol = 1e-7
     u, u_hat, omega = VMD(y_array, alpha, tau, K, DC, init, tol)
     return u
@@ -175,7 +175,7 @@ if df is not None:
 
     # 红虚线，不加粗
     if show_recon:
-        ax.plot(x_axis, reconstructed_signal, color='red', linestyle='-', linewidth=1.5, label="Dynamic Reconstructed (动态重构流量)")
+        ax.plot(x_axis, reconstructed_signal, color='red', linestyle='--', linewidth=1.5, label="Dynamic Reconstructed (动态重构流量)")
         plotted_data.append(reconstructed_signal)
 
     title_duration = "单日 24h" if days_to_add == 1 else "双日 48h"
@@ -203,4 +203,3 @@ if df is not None:
 
     # 渲染至网页
     st.pyplot(fig)
-
