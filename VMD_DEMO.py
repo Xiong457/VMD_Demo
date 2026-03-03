@@ -116,28 +116,28 @@ if df is not None:
     st.sidebar.header("👁️ 2. 核心图层解耦开关")
     st.sidebar.markdown("⚠️ **勾选将激活该图层，并将其注入红色的重构线中。**")
     
-    show_orig = st.sidebar.checkbox("⚫ 显示真实原始车流 (黑实线)", True)
-    show_recon = st.sidebar.checkbox("🔴 显示动态重构车流 (红虚线)", True)
+    show_orig = st.sidebar.checkbox("⚫ 真实原始车流 (黑实线)", True)
+    show_recon = st.sidebar.checkbox("🔴 动态重构车流 (红虚线)", True)
     
     st.sidebar.markdown("---")
     st.sidebar.header("⚙️ 3. IMF 模态提取与权重池")
     
-    show_imf1 = st.sidebar.checkbox("🟦 参与重构并显示: IMF 1 (基准趋势)", True)
+    show_imf1 = st.sidebar.checkbox("🟦 IMF 1 (基准趋势)", False)
     w1 = st.sidebar.slider("IMF 1 权重倍数", 0.0, 2.0, 1.0, 0.1) if show_imf1 else 0.0
     
-    show_imf2 = st.sidebar.checkbox("🟩 参与重构并显示: IMF 2 (昼夜潮汐)", True)
+    show_imf2 = st.sidebar.checkbox("🟩 IMF 2 (昼夜潮汐)", False)
     w2 = st.sidebar.slider("IMF 2 权重倍数", 0.0, 2.0, 1.0, 0.1) if show_imf2 else 0.0
     
-    show_imf3 = st.sidebar.checkbox("🟨 参与重构并显示: IMF 3 (早晚午间高峰)", False)
+    show_imf3 = st.sidebar.checkbox("🟨 IMF 3 (早晚午间高峰)", False)
     w3 = st.sidebar.slider("IMF 3 权重倍数", 0.0, 2.0, 1.0, 0.1) if show_imf3 else 0.0
     
-    show_imf4 = st.sidebar.checkbox("🟧 参与重构并显示: IMF 4 (天气、上下学)", False)
+    show_imf4 = st.sidebar.checkbox("🟧 IMF 4 (天气、上下学)", False)
     w4 = st.sidebar.slider("IMF 4 权重倍数", 0.0, 2.0, 1.0, 0.1) if show_imf4 else 0.0
     
-    show_imf5 = st.sidebar.checkbox("🟥 参与重构并显示: IMF 5 (事故、信号灯)", False)
+    show_imf5 = st.sidebar.checkbox("🟥 IMF 5 (事故、信号灯)", False)
     w5 = st.sidebar.slider("IMF 5 权重倍数", 0.0, 2.0, 1.0, 0.1) if show_imf5 else 0.0
     
-    show_imf6 = st.sidebar.checkbox("🟪 参与重构并显示: IMF 6 (高频噪音)", False)
+    show_imf6 = st.sidebar.checkbox("🟪 IMF 6 (高频噪音)", False)
     w6 = st.sidebar.slider("IMF 6 权重倍数", 0.0, 2.0, 1.0, 0.1) if show_imf6 else 0.0
 
     # ==========================================
@@ -177,7 +177,7 @@ if df is not None:
     plotted_data = []
 
     if show_orig:
-        ax.plot(x_axis, y_real, color='black', linestyle='-', linewidth=1.5, alpha=0.7, label="Original Real Traffic (原始真实流量)")
+        ax.plot(x_axis, y_real, color='black', linestyle='-', linewidth=1.5, alpha=0.7, label="原始真实流量")
         plotted_data.append(y_real)
         
     for i in range(6):
@@ -186,7 +186,7 @@ if df is not None:
             plotted_data.append(imfs_weighted[i])
 
     if show_recon:
-        ax.plot(x_axis, reconstructed_signal, color='red', linestyle='-', linewidth=1.5, label="Dynamic Reconstructed (动态重构流量)")
+        ax.plot(x_axis, reconstructed_signal, color='red', linestyle='-', linewidth=1.5, label="动态重构流量")
         plotted_data.append(reconstructed_signal)
 
     title_duration = "单日 24h" if days_to_add == 1 else "双日 48h"
@@ -214,5 +214,6 @@ if df is not None:
 
     # 渲染至网页
     st.pyplot(fig)
+
 
 
