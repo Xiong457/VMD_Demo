@@ -128,13 +128,13 @@ if df is not None:
     show_imf2 = st.sidebar.checkbox("🟩 参与重构并显示: IMF 2 (昼夜潮汐)", True)
     w2 = st.sidebar.slider("IMF 2 权重倍数", 0.0, 2.0, 1.0, 0.1) if show_imf2 else 0.0
     
-    show_imf3 = st.sidebar.checkbox("🟨 参与重构并显示: IMF 3 (中低频波动)", False)
+    show_imf3 = st.sidebar.checkbox("🟨 参与重构并显示: IMF 3 (早晚午间高峰)", False)
     w3 = st.sidebar.slider("IMF 3 权重倍数", 0.0, 2.0, 1.0, 0.1) if show_imf3 else 0.0
     
-    show_imf4 = st.sidebar.checkbox("🟧 参与重构并显示: IMF 4 (中频波动)", False)
+    show_imf4 = st.sidebar.checkbox("🟧 参与重构并显示: IMF 4 (天气、上下学)", False)
     w4 = st.sidebar.slider("IMF 4 权重倍数", 0.0, 2.0, 1.0, 0.1) if show_imf4 else 0.0
     
-    show_imf5 = st.sidebar.checkbox("🟥 参与重构并显示: IMF 5 (中高频波动)", False)
+    show_imf5 = st.sidebar.checkbox("🟥 参与重构并显示: IMF 5 (事故、信号灯)", False)
     w5 = st.sidebar.slider("IMF 5 权重倍数", 0.0, 2.0, 1.0, 0.1) if show_imf5 else 0.0
     
     show_imf6 = st.sidebar.checkbox("🟪 参与重构并显示: IMF 6 (高频噪音)", False)
@@ -172,7 +172,7 @@ if df is not None:
     fig, ax = plt.subplots(figsize=(15, 7), dpi=200)
     
     colors = ['#1f77b4', '#2ca02c', '#bcbd22', '#ff7f0e', '#d62728', '#9467bd']
-    labels = ["IMF 1 (基准趋势)", "IMF 2 (昼夜潮汐)", "IMF 3 (中低频)", "IMF 4 (中频)", "IMF 5 (中高频)", "IMF 6 (高频噪音)"]
+    labels = ["IMF 1 (基准趋势)", "IMF 2 (昼夜潮汐)", "IMF 3 (早晚午间高峰)", "IMF 4 (天气、上下学)", "IMF 5 (事故、信号灯)", "IMF 6 (高频噪音)"]
 
     plotted_data = []
 
@@ -214,4 +214,5 @@ if df is not None:
 
     # 渲染至网页
     st.pyplot(fig)
+
 
