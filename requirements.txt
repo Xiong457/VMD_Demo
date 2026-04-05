@@ -3,3 +3,4 @@ numpy
 matplotlib
 vmdpy
 openpyxl
+pandas==2.1.4
