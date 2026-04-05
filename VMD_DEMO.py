@@ -170,7 +170,7 @@ if df is not None:
     plt.rcParams['axes.unicode_minus'] = False  
     
     # 设置输出图像 DPI = 200
-    fig, ax = plt.subplots(figsize=(15, 7), dpi=200)
+    fig, ax = plt.subplots(figsize=(15, 7), dpi=400)
     
     colors = ['#1f77b4', '#2ca02c', '#bcbd22', '#ff7f0e', '#d62728', '#9467bd']
     labels = ["IMF 1 (基准趋势)", "IMF 2 (昼夜潮汐)", "IMF 3 (早晚午间高峰)", "IMF 4 (天气、上下学)", "IMF 5 (事故、信号灯)", "IMF 6 (高频噪音)"]
