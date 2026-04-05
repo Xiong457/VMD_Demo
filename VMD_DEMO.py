@@ -54,10 +54,10 @@ def load_and_preprocess(file_path):
     )
     
     full_df['Date'] = pd.to_datetime(full_df['采集日期'])
-    full_df['Datetime'] = full_df['Date'] + pd.to_timedelta((full_df['采集时间'] - 1) * 5, unit='m')
+    full_df['Datetime'] = full_df['Date'] + pd.to_timedelta((full_df['采集时间'] - 1) * 5, unit='min')
     
     agg_df = full_df.groupby('Datetime')['Total_Flow'].sum().reset_index()
-    full_idx = pd.date_range(start=agg_df['Datetime'].min(), end=agg_df['Datetime'].max(), freq='5T')
+    full_idx = pd.date_range(start=agg_df['Datetime'].min(), end=agg_df['Datetime'].max(), freq='5min')
     agg_df = agg_df.set_index('Datetime').reindex(full_idx, fill_value=0).reset_index()
     agg_df.columns = ['Datetime', 'Flow']
     
